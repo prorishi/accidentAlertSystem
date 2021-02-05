@@ -1,7 +1,0 @@
-{
-    "board": "arduino:avr:nano",
-    "configuration": "cpu=atmega328old",
-    "port": "COM7",
-    "programmer": "AVRISP mkII",
-    "sketch": "accidentAlertSystem.ino"
-}
