@@ -128,6 +128,6 @@ void loop()
  
   s += "</body> </html>";
 
-  client.print(s); // all the values are send to the webpage
+  client.print(s); 
   delay(100);
 }
