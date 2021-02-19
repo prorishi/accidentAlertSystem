@@ -3,12 +3,12 @@
 
 #include <SoftwareSerial.h>
 
-SoftwareSerial gsmSerial(10, 11); // RX, TX
+SoftwareSerial gsmSerial(A0, A1); 
 
 void initializeGSM() {
     gsmSerial.begin(9600);
 }
-
-void Call(char[11] num) {
-    gsmSerial.println("ATD" + num + ';'); 
-}
+//
+//void call(char[] num) {
+//    gsmSerial.println("ATD" + num + ';'); 
+//}

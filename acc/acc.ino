@@ -52,7 +52,8 @@ void loop() {
   Serial.print(" T: "); Serial.print(T);
   Serial.print(" Gx: "); Serial.print(Gx);
   Serial.print(" Gy: "); Serial.print(Gy);
-  Serial.print(" Gz: "); Serial.println(Gz);
+  Serial.print(" Gz: "); Serial.print(Gz);
+  Serial.print(" temp: "); Serial.println(T);
 
   delay(100);
 }

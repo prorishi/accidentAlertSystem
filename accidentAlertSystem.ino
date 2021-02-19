@@ -1,21 +1,19 @@
-// #include "acc.h"
-#include"gps.h"
+#include "mpu.h"
 
+// MPU mpu;
 void setup() {
-  Serial.begin(9600);
-  // initializeAccelerometer();
-  initiializeGPS();
+  Serial.begin(19200);
+  // mpu.initialize();
+  initializeMPU();
 }
-
 void loop() {
-  getLocation();
-  delay(100);
-  // int *tilt = readTilt();
-    
-  // Serial.print(tilt[0]);
-  // Serial.print(" ");
-  // Serial.println(tilt[1]);
-  // delay(100);
-
-
+  // mpu.read();
+  readMPU();
+  Serial.print("Ax: "); Serial.print(AX);
+  Serial.print(" Ay: "); Serial.print(AY);
+  Serial.print(" Az: "); Serial.print(AZ);
+  Serial.print(" T: "); Serial.print(T);
+  Serial.print(" Gx: "); Serial.print(GX);
+  Serial.print(" Gy: "); Serial.print(GY);
+  Serial.print(" Gz: "); Serial.println(GZ);
 }
