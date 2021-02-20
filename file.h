@@ -6,13 +6,14 @@ TinyGPSPlus gps;
 SoftwareSerial gpsSerial(4, 3);
 SoftwareSerial gsmSerial(10, 11); 
 
-String location, date, time;
-int h, m;
-
 uint8_t mpuRegisters[] = { 0x19, 0x6B, 0X6C, 0X1A, 0X1B, 0X1C, 0X23, 0X38, 0X68, 0X6A };
 uint8_t mpuRegisterData[] = { 0x07, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00 };
 
 double AX, AY, AZ, T, GX, GY, GZ;
+
+int hour , minute;
+String dt = "", t = "", pos = "";
+// int pm;
 
 void initializeMPU() {
     Wire.begin();
@@ -45,37 +46,54 @@ void initializeGPS() {
 }
 
 void readGPS() {
-    if (gpsSerial.available() > 0) {
+    while (gpsSerial.available() > 0) {
         if (gps.encode(gpsSerial.read())) {
             if (gps.location.isValid()) {
-                location += String(gps.location.lat() , 6);
-                location += "N, ";
-                location += String(gps.location.lng() , 6);
-                location += "E";
+                pos = String(gps.location.lat()); 
+                pos += ", ";
+                pos += String(gps.location.lng()); 
             }
             if (gps.date.isValid()) {
-                date +=String(gps.date.day());
-                date += "/";
-                date += String(gps.date.month());
-                date += "/";
-                date += String(gps.date.year());
+                dt = String(gps.date.day());
+                dt += " / ";
+                dt += String(gps.date.month());
+                dt += " / ";
+                dt += String(gps.date.year()); 
             }
             if (gps.time.isValid()) {
-                h = gps.time.hour() + 5,
-                m = gps.time.minute() + 30;
-                if (h > 23) h -= 24;
-                if (m > 59) {
-                    m -= 60;
-                    h += 1;
+                hour = gps.time.hour();
+                minute = gps.time.minute();
+                minute += 30; 
+                if (minute > 59) {
+                    minute -= 60;
+                    hour += 1;
                 }
-                time += String(h);
-                time += ":";
-                time += String(m);
-                time += ":";
-                time +=  String(gps.time.second());
+                hour += 5;
+                if (hour > 23) hour -= 24;  
+                // if (hour >= 12)  
+                // pm = 1;
+                // else
+                // pm = 0;
+                // hour = hour % 12;
+                if (hour < 10)
+                t = '0';
+                t += String(hour); 
+                t += " : ";
+                if (minute < 10)
+                t += '0';
+                t += String(minute); 
+                t += " : ";
+                if (second < 10)
+                t += '0';
+                t += String(gps.time.second());
+                // if (pm == 1)
+                // time_str += " PM ";
+                // else
+                // time_str += " AM ";
             }
         }
     }
+    
 }
 
 void initializeGSM() {
@@ -83,8 +101,25 @@ void initializeGSM() {
 }
 
 void sendSMS(String phn) {
-    gsmSerial.println("AT+CMGF=1"); 
-    gsmSerial.println("AT+CMGS=\"+91" + phn + "\"");
+    gsmSerial.print("AT+CMGF=1\r\n"); 
+    gsmSerial.print("AT+CMGS=\"+91" + phn + "\"\r\n");
     gsmSerial.print("helo"); 
     gsmSerial.write(26);
+    gsmSerial.print("AT+CMGF=1\r\n"); 
+}
+
+void call(String phn) {
+    gsmSerial.print("ATD+91" + phn + "\r\n");
+}
+
+bool recvCall() {
+    char inc[5] = "";
+    while (gsmSerial.available() > 0) {
+        inc += (char) gsmSerial.read();
+    }
+    if (strcmp(inc, "RING") == 0) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
