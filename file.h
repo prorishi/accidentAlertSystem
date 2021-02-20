@@ -12,7 +12,7 @@ uint8_t mpuRegisterData[] = { 0x07, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x
 double AX, AY, AZ, T, GX, GY, GZ;
 
 int hour , minute;
-String dt = "", t = "", pos = "";
+String dt = "inv", t = "inv", pos = "inv";
 // int pm;
 
 void initializeMPU() {
